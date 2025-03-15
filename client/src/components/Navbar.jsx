@@ -1,30 +1,9 @@
+
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
-
 import { useStateContext } from "../context";
 import { logo, menu, search, thirdweb } from "../assets";
 import { navlinks } from "../constants";
-
-const LoginLogoutButton = () => {
-  const { loginWithRedirect, isAuthenticated, logout } = useAuth0();
-
-  return isAuthenticated ? (
-    <button
-      onClick={() => logout({ returnTo: window.location.origin })}
-      className="bg-[#ff4d4d] text-white px-4 py-2 rounded-[10px] font-epilogue font-medium"
-    >
-      Log Out
-    </button>
-  ) : (
-    <button
-      onClick={() => loginWithRedirect()}
-      className="bg-[#6a5acd] text-white px-4 py-2 rounded-[10px] font-epilogue font-medium"
-    >
-      Log In
-    </button>
-  );
-};
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -32,27 +11,35 @@ const Navbar = () => {
   const [isActive, setIsActive] = useState("dashboard");
   const [toggleDrawer, setToggleDrawer] = useState(false);
   const { connect, address } = useStateContext();
-  const { user, isAuthenticated } = useAuth0();
+  
+  // Check if user is logged in
+  const isAuthenticated = !!localStorage.getItem("token");
 
-  console.log("Current User", user);
   const handleSearch = () => {
     if (searchQuery.trim() !== "") {
-      navigate(`/search?query=${searchQuery}`); // Navigate to the search results page with the query
+      navigate(`/search?query=${searchQuery}`); // Navigate to search results page
     }
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Remove token from local storage
+    alert("Logged out successfully!");
+    navigate("/login"); // Redirect to login page
+  };
+
   return (
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
       <div className="lg:flex-1 flex flex-row max-w-[458px] py-2 pl-4 pr-2 h-[52px] bg-[#1c1c24] rounded-[100px]">
         <input
           type="text"
           placeholder="Search for campaigns"
-          value={searchQuery} // Bind the input value to the state
-          onChange={(e) => setSearchQuery(e.target.value)} // Update the state when input changes
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
           className="flex w-full font-epilogue font-normal text-[14px] placeholder:text-[#4b5264] text-white bg-transparent outline-none"
         />
         <div
           className="w-[72px] h-full rounded-[20px] bg-[#4acd8d] flex justify-center items-center cursor-pointer"
-          onClick={handleSearch} // Trigger the search on click
+          onClick={handleSearch}
         >
           <img
             src={search}
@@ -62,6 +49,7 @@ const Navbar = () => {
         </div>
       </div>
 
+      {/* Buttons */}
       <div className="sm:flex hidden flex-row justify-end gap-4">
         <button
           onClick={() => (address ? navigate("create-campaign") : connect())}
@@ -71,7 +59,30 @@ const Navbar = () => {
         >
           {address ? "Create a campaign" : "Connect"}
         </button>
-        <LoginLogoutButton />
+
+        {/* Show Login/Register or Logout based on auth state */}
+        {isAuthenticated ? (
+          <button
+            onClick={handleLogout}
+            className="bg-[#ff4d4d] text-white px-4 py-2 rounded-[10px] font-epilogue font-medium"
+          >
+            Log Out
+          </button>
+        ) : (
+          <>
+            <Link to="/login">
+              <button className="bg-[#6a5acd] text-white px-4 py-2 rounded-[10px] font-epilogue font-medium">
+                Log In
+              </button>
+            </Link>
+            <Link to="/register">
+              <button className="bg-[#4acd8d] text-white px-4 py-2 rounded-[10px] font-epilogue font-medium">
+                Register
+              </button>
+            </Link>
+          </>
+        )}
+
         <Link to="/profile">
           <div className="w-[52px] h-[52px] rounded-full bg-[#2c2f32] flex justify-center items-center cursor-pointer">
             <img
@@ -147,7 +158,28 @@ const Navbar = () => {
             >
               {address ? "Create a campaign" : "Connect"}
             </button>
-            <LoginLogoutButton />
+
+            {isAuthenticated ? (
+              <button
+                onClick={handleLogout}
+                className="bg-[#ff4d4d] text-white px-4 py-2 rounded-[10px] font-epilogue font-medium"
+              >
+                Log Out
+              </button>
+            ) : (
+              <>
+                <Link to="/login">
+                  <button className="bg-[#6a5acd] text-white px-4 py-2 rounded-[10px] font-epilogue font-medium">
+                    Log In
+                  </button>
+                </Link>
+                <Link to="/register">
+                  <button className="bg-[#4acd8d] text-white px-4 py-2 rounded-[10px] font-epilogue font-medium">
+                    Register
+                  </button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

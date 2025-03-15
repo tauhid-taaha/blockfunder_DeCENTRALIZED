@@ -11,7 +11,10 @@ import {
   Homepage,
   Chatbot_Assistant,
   Dashboard,
-  SearchResults
+  Register,
+  SearchResults,
+  Login
+
 } from "./pages";
 
 const App = () => {
@@ -28,6 +31,8 @@ const App = () => {
 
         <Routes>
           <Route path="/" element={<Homepage />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
           <Route path="/search" element={<SearchResults />} /> {/* Add this route */}
           <Route path="/dashboard" element={<Dashboard />} />
