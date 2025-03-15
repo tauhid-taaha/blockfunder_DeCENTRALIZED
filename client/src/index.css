@@ -73,7 +73,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   color: #6a5acd;
   font-weight: bold;
 }
-
+iframe {
+  font-size: 30px !important; /* Increase font size */
+  font-weight: bold !important; /* Make text bold */
+}
 .profile-container p {
   font-size: 0.875rem;
   color: #b3b3c0;

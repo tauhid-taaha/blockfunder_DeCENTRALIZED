@@ -13,7 +13,8 @@ import {
   Dashboard,
   Register,
   SearchResults,
-  Login
+  Login,
+  ChatbotPage
 
 } from "./pages";
 
@@ -31,6 +32,7 @@ const App = () => {
 
         <Routes>
           <Route path="/" element={<Homepage />} />
+          <Route path="/ai" element={<ChatbotPage />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
