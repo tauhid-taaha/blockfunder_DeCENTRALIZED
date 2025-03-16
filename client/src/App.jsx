@@ -1,5 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
+import { useTheme } from "./context/ThemeContext";
 
 import { Sidebar, Navbar } from "./components";
 import {
@@ -14,13 +15,15 @@ import {
   Register,
   SearchResults,
   Login,
-  ChatbotPage
-
+  ChatbotPage,
+  BookmarkedCampaigns
 } from "./pages";
 
 const App = () => {
+  const { isDarkMode } = useTheme();
+  
   return (
-    <div className="relative sm:-8 p-4 bg-[#13131a] min-h-screen flex flex-row">
+    <div className={`relative sm:-8 p-4 ${isDarkMode ? 'bg-[#13131a]' : 'bg-gray-100'} min-h-screen flex flex-row`}>
       {/* Sidebar */}
       <div className="sm:flex hidden mr-10 relative">
         <Sidebar />
@@ -36,9 +39,10 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/search" element={<SearchResults />} /> {/* Add this route */}
+          <Route path="/search" element={<SearchResults />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/donated-campaigns" element={<DonatedCampaignsPage />} />
+          <Route path="/bookmarks" element={<BookmarkedCampaigns />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/create-campaign" element={<CreateCampaign />} />
           <Route path="/campaign-details/:id" element={<CampaignDetails />} />

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { DisplayCampaigns } from "../components";
+import { DisplayCampaigns, CampaignFilters } from "../components";
 import { useStateContext } from "../context";
 
 const Profile = () => {
   const [isLoadingCampaigns, setIsLoadingCampaigns] = useState(false);
   const [campaigns, setCampaigns] = useState([]);
+  const [filteredCampaigns, setFilteredCampaigns] = useState([]);
+  const [sortOption, setSortOption] = useState('newest');
 
   const { address, contract, getUserCampaigns } = useStateContext();
   const { user, isAuthenticated } = useAuth0();
@@ -14,12 +16,52 @@ const Profile = () => {
     setIsLoadingCampaigns(true);
     const data = await getUserCampaigns();
     setCampaigns(data);
+    setFilteredCampaigns(data);
     setIsLoadingCampaigns(false);
   };
 
   useEffect(() => {
     if (contract) fetchCampaigns();
   }, [address, contract]);
+
+  // Apply sorting whenever campaigns or sortOption changes
+  useEffect(() => {
+    if (campaigns.length === 0) return;
+    
+    let result = [...campaigns];
+    
+    // Apply sorting
+    switch (sortOption) {
+      case 'newest':
+        // Sort by deadline (newest first)
+        result.sort((a, b) => parseInt(b.deadline) - parseInt(a.deadline));
+        break;
+      case 'endingSoon':
+        // Sort by deadline (ending soon first)
+        result.sort((a, b) => parseInt(a.deadline) - parseInt(b.deadline));
+        break;
+      case 'mostFunded':
+        // Sort by amount collected (highest first)
+        result.sort((a, b) => parseFloat(b.amountCollected) - parseFloat(a.amountCollected));
+        break;
+      case 'leastFunded':
+        // Sort by amount collected (lowest first)
+        result.sort((a, b) => parseFloat(a.amountCollected) - parseFloat(b.amountCollected));
+        break;
+      case 'percentFunded':
+        // Sort by percentage funded (highest first)
+        result.sort((a, b) => {
+          const percentA = (parseFloat(a.amountCollected) / parseFloat(a.target)) * 100;
+          const percentB = (parseFloat(b.amountCollected) / parseFloat(b.target)) * 100;
+          return percentB - percentA;
+        });
+        break;
+      default:
+        break;
+    }
+    
+    setFilteredCampaigns(result);
+  }, [campaigns, sortOption]);
 
   return (
     <div className="flex flex-col gap-6 p-4">
@@ -72,10 +114,15 @@ const Profile = () => {
 
       {/* Campaigns Section */}
       <div className="mt-6">
+        <CampaignFilters 
+          sortOption={sortOption}
+          setSortOption={setSortOption}
+        />
+        
         <DisplayCampaigns
           title="Your Campaigns"
           isLoading={isLoadingCampaigns}
-          campaigns={campaigns}
+          campaigns={filteredCampaigns}
         />
       </div>
     </div>

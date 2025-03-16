@@ -3,14 +3,16 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ethers } from 'ethers';
 
 import { useStateContext } from '../context';
-import { CountBox, CustomButton, Loader } from '../components';
+import { CountBox, CustomButton, Loader, SocialShare, ProgressBar } from '../components';
 import { calculateBarPercentage, daysLeft } from '../utils';
 import { thirdweb } from '../assets';
+import { useTheme } from '../context/ThemeContext';
 
 const CampaignDetails = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { donate, getDonations, contract, address } = useStateContext();
+  const { isDarkMode } = useTheme();
 
   const [isLoading, setIsLoading] = useState(false);
   const [amount, setAmount] = useState('');
@@ -43,23 +45,31 @@ const CampaignDetails = () => {
     <div className="w-full flex md:flex-row flex-col mt-10 gap-[30px]">
       <div className="flex-1 flex-col">
         <img src={state.image} alt="campaign" className="w-full h-[410px] object-cover rounded-xl"/>
-        <div className="relative w-full h-[5px] bg-[#3a3a43] mt-2">
-          <div className="absolute h-full bg-[#4acd8d]" style={{ width: `${calculateBarPercentage(state.target, state.amountCollected)}%`, maxWidth: '100%'}}>
-          </div>
+        
+        <div className="mt-4">
+          <ProgressBar current={parseFloat(state.amountCollected)} target={parseFloat(state.target)} />
+        </div>
+        
+        <div className="mt-4">
+          <SocialShare 
+            title={`Support this campaign: ${state.title}`} 
+            description={state.description}
+            url={window.location.href}
+          />
         </div>
       </div>
 
       <div className="flex md:w-[150px] w-full flex-wrap justify-between gap-[30px] group">
-  <div className="group-hover:bg-purple-900 hover:scale-120 transition-all duration-300 ease-in-out">
-    <CountBox title="Days Left" value={remainingDays} />
-  </div>
-  <div className="group-hover:bg-purple-900 hover:scale-120 transition-all duration-300 ease-in-out">
-    <CountBox title={`Raised of ${state.target}`} value={state.amountCollected} />
-  </div>
-  <div className="group-hover:bg-purple-900 hover:scale-110 transition-all duration-300 ease-in-out">
-    <CountBox title="Total Backers" value={donators.length} />
-  </div>
-</div>
+        <div className="group-hover:bg-purple-900 hover:scale-120 transition-all duration-300 ease-in-out">
+          <CountBox title="Days Left" value={remainingDays} />
+        </div>
+        <div className="group-hover:bg-purple-900 hover:scale-120 transition-all duration-300 ease-in-out">
+          <CountBox title={`Raised of ${state.target}`} value={state.amountCollected} />
+        </div>
+        <div className="group-hover:bg-purple-900 hover:scale-110 transition-all duration-300 ease-in-out">
+          <CountBox title="Total Backers" value={donators.length} />
+        </div>
+      </div>
 
     </div>
 

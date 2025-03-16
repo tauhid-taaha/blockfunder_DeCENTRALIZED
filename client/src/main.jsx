@@ -4,6 +4,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
 import "./index.css";
 import { StateContextProvider } from "./context";
+import { ThemeProvider } from "./context/ThemeContext";
 import App from "./App";
 import { Sepolia } from "@thirdweb-dev/chains";
 import { Auth0Provider } from "@auth0/auth0-react";
@@ -17,15 +18,17 @@ root.render(
   >
     <Router>
       <StateContextProvider>
-        <Auth0Provider
-          domain="dev-vwmgruw6gs4yfwnj.us.auth0.com"
-          clientId="sGkEYjUGIyYCVRs8QYgo1mdnDVARNtUB"
-          authorizationParams={{
-            redirect_uri: window.location.origin,
-          }}
-        >
-          <App />
-        </Auth0Provider>
+        <ThemeProvider>
+          <Auth0Provider
+            domain="dev-vwmgruw6gs4yfwnj.us.auth0.com"
+            clientId="sGkEYjUGIyYCVRs8QYgo1mdnDVARNtUB"
+            authorizationParams={{
+              redirect_uri: window.location.origin,
+            }}
+          >
+            <App />
+          </Auth0Provider>
+        </ThemeProvider>
       </StateContextProvider>
     </Router>
   </ThirdwebProvider>

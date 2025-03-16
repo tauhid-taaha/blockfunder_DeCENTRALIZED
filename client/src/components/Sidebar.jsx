@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
 
 import { logo, sun } from '../assets';
 import { navlinks } from '../constants';
@@ -17,14 +18,15 @@ const Icon = ({ styles, name, imgUrl, isActive, disabled, handleClick }) => (
 const Sidebar = () => {
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState('dashboard');
+  const { isDarkMode } = useTheme();
 
   return (
     <div className="flex justify-between items-center flex-col sticky top-5 h-[93vh]">
       <Link to="/">
-        <Icon styles="w-[52px] h-[52px] bg-[#2c2f32]" imgUrl={logo} />
+        <Icon styles={`w-[52px] h-[52px] ${isDarkMode ? 'bg-[#2c2f32]' : 'bg-white shadow-md'}`} imgUrl={logo} />
       </Link>
 
-      <div className="flex-1 flex flex-col justify-between items-center bg-[#1c1c24] rounded-[20px] w-[76px] py-4 mt-12">
+      <div className={`flex-1 flex flex-col justify-between items-center ${isDarkMode ? 'bg-[#1c1c24]' : 'bg-white'} rounded-[20px] w-[76px] py-4 mt-12 shadow-md`}>
         <div className="flex flex-col justify-center items-center gap-3">
           {navlinks.map((link) => (
             <Icon 
