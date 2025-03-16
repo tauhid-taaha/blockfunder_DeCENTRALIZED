@@ -15,3 +15,4 @@ export { default as ProgressBar } from './ProgressBar';
 export { default as SocialShare } from './SocialShare';
 export { default as BookmarkButton } from './BookmarkButton';
 export { default as CampaignFilters } from './CampaignFilters';
+export {default as TopDonors} from './TopDonors';

@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useStateContext } from "../context";
-import Widget from "../components/Widget"; // Import the simplified Widget
+import Widget from "../components/Widget"; 
+import TopDonors from "../components/TopDonors";// Import the simplified Widget
 
 const Dashboard = () => {
-  const { getTotalDonations } = useStateContext();
+  const { getTotalDonations, getTopDonors } = useStateContext(); // Include getTopDonors
   const [totalDonations, setTotalDonations] = useState(0);
+  const [topDonors, setTopDonors] = useState([]); // State for top donors
 
   useEffect(() => {
-    const fetchTotalDonations = async () => {
+    const fetchDashboardData = async () => {
       const total = await getTotalDonations();
       setTotalDonations(total);
+
+      const donors = await getTopDonors(); // Fetch top donors
+      setTopDonors(donors);
     };
-    fetchTotalDonations();
-  }, [getTotalDonations]);
+
+    fetchDashboardData();
+  }, [getTotalDonations, getTopDonors]);
 
   return (
     <div className="min-h-screen p-6 bg-gradient-to-br from-[#1e1e2d] via-[#23233d] to-[#181a21] text-white">
@@ -21,15 +27,22 @@ const Dashboard = () => {
       </div>
 
       {/* Grid Layout for the Widgets */}
-      <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Total Donations Widget */}
-        <Widget title="Total Donations" amount={totalDonations} />
+      
+
+        {/* Top Donors Widget */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  <Widget title="Total Donations" amount={totalDonations} />
+  <div className="col-span-2">
+    <TopDonors />
+  </div>
+</div>
       </div>
-    </div>
+    
   );
 };
 
 export default Dashboard;
+
 
 
 

@@ -305,6 +305,28 @@ const getUserCampaigns = async () => {
     return [];
   }
 };
+const getTopDonors = async () => {
+  if (!contract) return [];
+  try {
+    const allCampaigns = await getAllCampaigns(contract);
+    const donorTotals = {};
+
+    for (const campaign of allCampaigns) {
+      const donations = await getDonations(campaign.pId);
+      for (const donation of donations) {
+        donorTotals[donation.donator] = (donorTotals[donation.donator] || 0) + parseFloat(donation.donation);
+      }
+    }
+
+    return Object.entries(donorTotals)
+      .map(([donor, total]) => ({ donor, total }))
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 5);
+  } catch (err) {
+    console.error("Error in getTopDonors:", err);
+    return [];
+  }
+};
 
   return (
     <StateContext.Provider
@@ -324,7 +346,9 @@ const getUserCampaigns = async () => {
         getTotalDonations,       // Retrieves the total donations
         getTotalCampaigns,       // Retrieves the total campaigns count
         getTopCampaign,          // Retrieves the campaign with the highest donations
-        getRecentDonations       // Retrieves the most recent donations
+        getRecentDonations  ,
+        getTopDonors
+            // Retrieves the most recent donations
         
       }}
     >
