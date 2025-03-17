@@ -1,31 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
-import { addBlog } from '../utils/blogStorage';
+import { createBlog } from '../utils/api';
+import { useAuth } from '../context/AuthContext';
 
 const CreateBlog = () => {
   const { isDarkMode } = useTheme();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [author, setAuthor] = useState('');
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { user } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Get username from localStorage if available
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
-      try {
-        const userData = JSON.parse(storedUser);
-        setAuthor(userData.username || '');
-      } catch (e) {
-        console.error('Error parsing user data:', e);
-      }
+  // Redirect if not logged in
+  React.useEffect(() => {
+    if (!user) {
+      navigate('/login?redirect=/create-blog');
     }
-  }, []);
+  }, [user, navigate]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Validate form
@@ -39,20 +35,24 @@ const CreateBlog = () => {
       return;
     }
     
-    if (!author.trim()) {
-      setError('Author name is required');
-      return;
+    try {
+      setLoading(true);
+      setError('');
+      
+      // Create new blog
+      const newBlog = await createBlog({
+        title,
+        content
+      });
+      
+      // Redirect to the new blog
+      navigate(`/blog/${newBlog._id}`);
+    } catch (error) {
+      console.error('Error creating blog:', error);
+      setError(error.response?.data?.message || 'Failed to create blog. Please try again.');
+    } finally {
+      setLoading(false);
     }
-    
-    // Create new blog
-    const newBlog = addBlog({
-      title,
-      content,
-      author
-    });
-    
-    // Redirect to the new blog
-    navigate(`/blog/${newBlog.id}`);
   };
 
   return (
@@ -84,7 +84,7 @@ const CreateBlog = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className={`rounded-lg overflow-hidden shadow-lg ${
+          className={`rounded-lg overflow-hidden shadow-lg relative ${
             isDarkMode ? 'bg-[#1c1c24] border border-gray-800' : 'bg-white border border-gray-100'
           } p-6`}
         >
@@ -99,28 +99,6 @@ const CreateBlog = () => {
           )}
           
           <form onSubmit={handleSubmit}>
-            <div className="mb-6">
-              <label 
-                htmlFor="author" 
-                className={`block mb-2 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
-              >
-                Your Username
-              </label>
-              <input
-                type="text"
-                id="author"
-                value={author}
-                onChange={(e) => setAuthor(e.target.value)}
-                className={`w-full px-4 py-2 rounded-lg ${
-                  isDarkMode 
-                    ? 'bg-gray-800 text-white border-gray-700 focus:border-[#00A86B]' 
-                    : 'bg-white text-gray-800 border-gray-300 focus:border-[#00A86B]'
-                } border focus:ring-2 focus:ring-[#00A86B]/50 outline-none transition-colors`}
-                placeholder="Enter your username"
-                required
-              />
-            </div>
-            
             <div className="mb-6">
               <label 
                 htmlFor="title" 
@@ -173,9 +151,12 @@ const CreateBlog = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 type="submit"
-                className="px-6 py-3 bg-gradient-to-r from-[#00A86B] to-[#008F5B] text-white rounded-lg font-medium"
+                disabled={loading}
+                className={`px-6 py-3 bg-gradient-to-r from-[#00A86B] to-[#008F5B] text-white rounded-lg font-medium ${
+                  loading ? 'opacity-70 cursor-not-allowed' : ''
+                }`}
               >
-                Publish Blog
+                {loading ? 'Publishing...' : 'Publish Blog'}
               </motion.button>
               
               <motion.button

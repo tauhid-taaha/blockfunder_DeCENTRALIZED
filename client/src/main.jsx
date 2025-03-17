@@ -5,6 +5,7 @@ import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
 import "./index.css";
 import { StateContextProvider } from "./context";
 import { ThemeProvider } from "./context/ThemeContext";
+import { AuthProvider } from "./context/AuthContext";
 import App from "./App";
 import { Sepolia } from "@thirdweb-dev/chains";
 
@@ -18,7 +19,9 @@ root.render(
     <BrowserRouter>
       <StateContextProvider>
         <ThemeProvider>
-          <App />
+          <AuthProvider>
+            <App />
+          </AuthProvider>
         </ThemeProvider>
       </StateContextProvider>
     </BrowserRouter>

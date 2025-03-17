@@ -17,7 +17,7 @@
     "@safe-global/safe-core-sdk-types": "^2.3.0",
     "@thirdweb-dev/react": "^4.9.4",
     "@thirdweb-dev/sdk": "^4.0.99",
-    "axios": "^1.6.7",
+    "axios": "^1.8.3",
     "chart.js": "^4.4.1",
     "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.7.2",

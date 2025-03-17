@@ -86,48 +86,99 @@ const Homepage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className="flex flex-wrap justify-center gap-4"
+            className="flex flex-col items-center"
           >
-            <Link
-              to="/home"
-              className="group relative px-8 py-4 bg-gradient-to-r from-[#00A86B] to-[#008F5B] rounded-lg overflow-hidden"
-            >
-              <span className="relative z-10 text-white font-semibold text-lg">View Campaigns</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-[#008F5B] to-[#00A86B] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </Link>
-            <Link
-              to="/chatbot"
-              className="group relative px-8 py-4 bg-gradient-to-r from-[#00A86B] to-[#008F5B] rounded-lg overflow-hidden"
-            >
-              <span className="relative z-10 text-white font-semibold text-lg">Learn More</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-[#008F5B] to-[#00A86B] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </Link>
-            <Link
-              to="/crypto-rates"
-              className="group relative px-8 py-4 bg-gradient-to-r from-[#00A86B] to-[#008F5B] rounded-lg overflow-hidden"
-            >
-              <span className="relative z-10 text-white font-semibold text-lg">Crypto Rates</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-[#008F5B] to-[#00A86B] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </Link>
-            <Link
-              to="/crypto-news"
-              className="group relative px-8 py-4 bg-gradient-to-r from-[#00A86B] to-[#008F5B] rounded-lg overflow-hidden"
-            >
-              <span className="relative z-10 text-white font-semibold text-lg">Crypto News</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-[#008F5B] to-[#00A86B] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </Link>
-            <Link
-              to="/blogs"
-              className="group relative px-8 py-4 bg-gradient-to-r from-[#00A86B] to-[#008F5B] rounded-lg overflow-hidden"
-            >
-              <span className="relative z-10 text-white font-semibold text-lg">Community Blog</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-[#008F5B] to-[#00A86B] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </Link>
+            {/* Campaign Management */}
+            <div className="mb-8 w-full max-w-3xl">
+              <motion.h3 
+                whileHover={{ scale: 1.05 }}
+                className="text-xl font-semibold text-[#00A86B] mb-4 text-center bg-white/5 py-2 rounded-lg backdrop-blur-sm"
+              >
+                Campaign Tools
+              </motion.h3>
+              <div className="flex flex-wrap justify-center gap-4">
+                <Link
+                  to="/home"
+                  className="group relative px-8 py-4 bg-gradient-to-r from-[#00A86B] to-[#008F5B] rounded-lg overflow-hidden"
+                >
+                  <span className="relative z-10 text-white font-semibold text-lg">View Campaigns</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#008F5B] to-[#00A86B] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </Link>
+                <Link
+                  to="/search"
+                  className="group relative px-8 py-4 bg-gradient-to-r from-[#00A86B] to-[#008F5B] rounded-lg overflow-hidden"
+                >
+                  <span className="relative z-10 text-white font-semibold text-lg">Sort Campaigns</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#008F5B] to-[#00A86B] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </Link>
+                <Link
+                  to="/bookmarks"
+                  className="group relative px-8 py-4 bg-gradient-to-r from-[#00A86B] to-[#008F5B] rounded-lg overflow-hidden"
+                >
+                  <span className="relative z-10 text-white font-semibold text-lg">Bookmarked Campaigns</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#008F5B] to-[#00A86B] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </Link>
+              </div>
+            </div>
+            
+            {/* Community & Resources */}
+            <div className="mb-8 w-full max-w-3xl">
+              <motion.h3 
+                whileHover={{ scale: 1.05 }}
+                className="text-xl font-semibold text-[#00A86B] mb-4 text-center bg-white/5 py-2 rounded-lg backdrop-blur-sm"
+              >
+                Community & Resources
+              </motion.h3>
+              <div className="flex flex-wrap justify-center gap-4">
+                <Link
+                  to="/blogs"
+                  className="group relative px-8 py-4 bg-gradient-to-r from-[#00A86B] to-[#008F5B] rounded-lg overflow-hidden"
+                >
+                  <span className="relative z-10 text-white font-semibold text-lg">Community Blogs</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#008F5B] to-[#00A86B] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </Link>
+                <Link
+                  to="/chatbot"
+                  className="group relative px-8 py-4 bg-gradient-to-r from-[#00A86B] to-[#008F5B] rounded-lg overflow-hidden"
+                >
+                  <span className="relative z-10 text-white font-semibold text-lg">Learn More</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#008F5B] to-[#00A86B] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </Link>
+              </div>
+            </div>
+            
+            {/* Crypto Resources */}
+            <div className="w-full max-w-3xl">
+              <motion.h3 
+                whileHover={{ scale: 1.05 }}
+                className="text-xl font-semibold text-[#00A86B] mb-4 text-center bg-white/5 py-2 rounded-lg backdrop-blur-sm"
+              >
+                Crypto Resources
+              </motion.h3>
+              <div className="flex flex-wrap justify-center gap-4">
+                <Link
+                  to="/crypto-rates"
+                  className="group relative px-8 py-4 bg-gradient-to-r from-[#00A86B] to-[#008F5B] rounded-lg overflow-hidden"
+                >
+                  <span className="relative z-10 text-white font-semibold text-lg">Crypto Rates</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#008F5B] to-[#00A86B] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </Link>
+                <Link
+                  to="/crypto-news"
+                  className="group relative px-8 py-4 bg-gradient-to-r from-[#00A86B] to-[#008F5B] rounded-lg overflow-hidden"
+                >
+                  <span className="relative z-10 text-white font-semibold text-lg">Crypto News</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#008F5B] to-[#00A86B] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </Link>
+              </div>
+            </div>
           </motion.div>
         </motion.div>
 
