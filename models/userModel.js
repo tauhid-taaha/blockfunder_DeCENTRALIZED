@@ -45,6 +45,8 @@ const userSchema = new mongoose.Schema(
       type: [String], // Allows users to store multiple wallet addresses
       default: [], // Starts with an empty array
     },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
   },
   { timestamps: true }
 );

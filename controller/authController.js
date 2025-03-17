@@ -1,6 +1,8 @@
 import userModel from "../models/userModel.js";
 import JWT from "jsonwebtoken";
 import { comparePassword, hashPassword } from "./../helpers/authHelper.js";
+import crypto from 'crypto';
+import axios from 'axios';
 
 export const registerController = async (req, res) => {
   try {
@@ -176,5 +178,147 @@ export const addWalletAddressController = async (req, res) => {
 
 export const testController = (req, res) => {
   console.log("Protected route");
+};
+
+export const forgotPasswordController = async (req, res) => {
+  try {
+    const { email, answer } = req.body;
+
+    // Validation
+    if (!email || !answer) {
+      return res.status(400).send({
+        success: false,
+        message: "Email and answer are required",
+      });
+    }
+
+    // Check user
+    const user = await userModel.findOne({ email, answer });
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "Wrong email or answer",
+      });
+    }
+
+    // Generate reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    user.resetPasswordToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
+    user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+    await user.save();
+
+    res.status(200).send({
+      success: true,
+      message: "Password reset token generated",
+      resetToken,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in forgot password",
+      error,
+    });
+  }
+};
+
+export const resetPasswordController = async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    // Validation
+    if (!token || !newPassword) {
+      return res.status(400).send({
+        success: false,
+        message: "Token and new password are required",
+      });
+    }
+
+    // Hash token
+    const resetPasswordToken = crypto
+      .createHash('sha256')
+      .update(token)
+      .digest('hex');
+
+    // Find user with valid token
+    const user = await userModel.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).send({
+        success: false,
+        message: "Invalid or expired reset token",
+      });
+    }
+
+    // Hash new password
+    const hashedPassword = await hashPassword(newPassword);
+
+    // Update user password
+    user.password = hashedPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    res.status(200).send({
+      success: true,
+      message: "Password reset successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in reset password",
+      error,
+    });
+  }
+};
+
+export const getCryptoRatesController = async (req, res) => {
+  try {
+    // Get top 10 cryptocurrencies by market cap
+    const response = await axios.get(
+      'https://api.coingecko.com/api/v3/coins/markets',
+      {
+        params: {
+          vs_currency: 'usd',
+          order: 'market_cap_desc',
+          per_page: 10,
+          page: 1,
+          sparkline: false
+        }
+      }
+    );
+
+    const cryptoData = response.data.map(coin => ({
+      id: coin.id,
+      symbol: coin.symbol.toUpperCase(),
+      name: coin.name,
+      image: coin.image,
+      current_price: coin.current_price,
+      market_cap: coin.market_cap,
+      price_change_24h: coin.price_change_percentage_24h,
+      last_updated: coin.last_updated
+    }));
+
+    res.status(200).send({
+      success: true,
+      message: "Crypto rates fetched successfully",
+      data: cryptoData
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error fetching crypto rates",
+      error: error.message
+    });
+  }
 };
 

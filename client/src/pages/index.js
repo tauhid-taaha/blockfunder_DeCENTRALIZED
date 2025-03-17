@@ -13,3 +13,4 @@ export {default as Register} from './Register'
 export {default as Login} from './Login'
 export {default as ChatbotPage} from './ChatbotPage'
 export {default as BookmarkedCampaigns} from './BookmarkedCampaigns'
+export { default as CryptoRates } from './CryptoRates';

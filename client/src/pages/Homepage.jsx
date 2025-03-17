@@ -36,18 +36,24 @@ const Homepage = () => {
       </p>
 
       {/* Call to Action */}
-      <div className="flex justify-center my-8 space-x-6">
+      <div className="flex flex-wrap justify-center my-8 gap-4">
         <Link
-          to="/home" // Navigate to /home
+          to="/home"
           className="bg-gradient-to-r from-[#006A4E] to-[#004F39] py-4 px-6 rounded-lg text-white text-lg font-medium shadow-lg hover:shadow-xl hover:scale-105 transition-transform"
         >
           View Campaigns
         </Link>
         <Link
-          to="/chatbot" // Navigate to /chatbot
+          to="/chatbot"
           className="bg-gradient-to-r from-[#006A4E] to-[#004F39] py-4 px-6 rounded-lg text-white text-lg font-medium shadow-lg hover:shadow-xl hover:scale-105 transition-transform"
         >
           Learn More
+        </Link>
+        <Link
+          to="/crypto-rates"
+          className="bg-gradient-to-r from-[#006A4E] to-[#004F39] py-4 px-6 rounded-lg text-white text-lg font-medium shadow-lg hover:shadow-xl hover:scale-105 transition-transform"
+        >
+          Check Crypto Rates
         </Link>
       </div>
 

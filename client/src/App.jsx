@@ -16,7 +16,8 @@ import {
   SearchResults,
   Login,
   ChatbotPage,
-  BookmarkedCampaigns
+  BookmarkedCampaigns,
+  CryptoRates
 } from "./pages";
 
 const App = () => {
@@ -47,6 +48,7 @@ const App = () => {
           <Route path="/create-campaign" element={<CreateCampaign />} />
           <Route path="/campaign-details/:id" element={<CampaignDetails />} />
           <Route path="/chatbot" element={<Chatbot_Assistant />} />
+          <Route path="/crypto-rates" element={<CryptoRates />} />
         </Routes>
       </div>
     </div>
