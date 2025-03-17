@@ -327,6 +327,42 @@ const getTopDonors = async () => {
     return [];
   }
 };
+const getRecentProjects = async () => {
+  
+
+  try {
+    const allCampaigns = await contract.call("getCampaigns");
+
+    // Ensure we have campaigns before processing
+    if (!allCampaigns || allCampaigns.length === 0) {
+      return [];
+    }
+
+    // Reverse the campaigns array to get the latest ones first
+    const sortedCampaigns = [...allCampaigns].reverse();
+
+    // Parse the campaigns
+    const parsedCampaigns = sortedCampaigns.map((campaign, i) => ({
+      owner: campaign.owner,
+      title: campaign.title,
+      description: campaign.description,
+      target: ethers.utils.formatEther(campaign.target.toString()),
+      deadline: campaign.deadline.toNumber(),
+      amountCollected: ethers.utils.formatEther(campaign.collected_amount.toString()),
+      image: campaign.image,
+      pId: allCampaigns.length - i - 1, // Ensure correct ID mapping
+    }));
+
+    return parsedCampaigns.slice(0, 5); // Return the latest 5 campaigns
+  } catch (err) {
+    console.error("Error in getRecentProjects:", err);
+    return [];
+  }
+};
+
+
+
+
 
   return (
     <StateContext.Provider
@@ -347,7 +383,9 @@ const getTopDonors = async () => {
         getTotalCampaigns,       // Retrieves the total campaigns count
         getTopCampaign,          // Retrieves the campaign with the highest donations
         getRecentDonations  ,
-        getTopDonors
+        getTopDonors,
+        getRecentProjects 
+       
             // Retrieves the most recent donations
         
       }}

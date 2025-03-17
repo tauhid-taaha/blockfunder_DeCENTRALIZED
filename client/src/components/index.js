@@ -16,3 +16,6 @@ export { default as SocialShare } from './SocialShare';
 export { default as BookmarkButton } from './BookmarkButton';
 export { default as CampaignFilters } from './CampaignFilters';
 export {default as TopDonors} from './TopDonors';
+export {default as RecentProjects } from './RecentProjects'
+
+export {default as CampaignStats } from './CampaignStats';

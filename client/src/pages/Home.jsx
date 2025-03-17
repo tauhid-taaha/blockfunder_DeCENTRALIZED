@@ -13,11 +13,17 @@ const Home = () => {
 
   const fetchCampaigns = async () => {
     setIsLoading(true);
-    const data = await getCampaigns();
+    const data = await getCampaigns(contract);
+    
     setCampaigns(data);
-    setFilteredCampaigns(data);
+  
+    // Ensure the newest campaigns (highest pId) come first
+    setFilteredCampaigns([...data].sort((a, b) => b.pId - a.pId));
+  
     setIsLoading(false);
-  }
+  };
+  
+  
 
   useEffect(() => {
     if(contract) fetchCampaigns();
@@ -26,30 +32,21 @@ const Home = () => {
   // Apply sorting whenever campaigns or sortOption changes
   useEffect(() => {
     if (campaigns.length === 0) return;
-    
-    let result = [...campaigns];
-    
-    // Apply sorting
+  
+    let sortedCampaigns = [...campaigns];
+  
     switch (sortOption) {
       case 'newest':
-        // Sort by deadline (newest first)
-        result.sort((a, b) => parseInt(b.deadline) - parseInt(a.deadline));
-        break;
-      case 'endingSoon':
-        // Sort by deadline (ending soon first)
-        result.sort((a, b) => parseInt(a.deadline) - parseInt(b.deadline));
+        sortedCampaigns.sort((a, b) => b.pId - a.pId); // Sort by index (newest first)
         break;
       case 'mostFunded':
-        // Sort by amount collected (highest first)
-        result.sort((a, b) => parseFloat(b.amountCollected) - parseFloat(a.amountCollected));
+        sortedCampaigns.sort((a, b) => parseFloat(b.amountCollected) - parseFloat(a.amountCollected));
         break;
       case 'leastFunded':
-        // Sort by amount collected (lowest first)
-        result.sort((a, b) => parseFloat(a.amountCollected) - parseFloat(b.amountCollected));
+        sortedCampaigns.sort((a, b) => parseFloat(a.amountCollected) - parseFloat(b.amountCollected));
         break;
       case 'percentFunded':
-        // Sort by percentage funded (highest first)
-        result.sort((a, b) => {
+        sortedCampaigns.sort((a, b) => {
           const percentA = (parseFloat(a.amountCollected) / parseFloat(a.target)) * 100;
           const percentB = (parseFloat(b.amountCollected) / parseFloat(b.target)) * 100;
           return percentB - percentA;
@@ -58,9 +55,10 @@ const Home = () => {
       default:
         break;
     }
-    
-    setFilteredCampaigns(result);
-  }, [campaigns, sortOption]);
+  
+    setFilteredCampaigns(sortedCampaigns);
+  }, [campaigns, sortOption]); // Runs every time campaigns change
+  
 
   return (
     <div>
