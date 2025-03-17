@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 import { DisplayCampaigns, CampaignFilters } from '../components';
 import { useStateContext } from '../context'
+import { useTheme } from '../context/ThemeContext';
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -11,6 +13,7 @@ const Home = () => {
   const [sortOption, setSortOption] = useState('newest');
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { isDarkMode } = useTheme();
 
   const { address, contract, getCampaigns } = useStateContext();
 
@@ -77,16 +80,36 @@ const Home = () => {
 
   return (
     <div>
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-8"
+      >
+        <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+          Discover Campaigns
+        </h1>
+        <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+          Support innovative blockchain projects and make a difference with your contributions
+        </p>
+      </motion.div>
+      
       <CampaignFilters 
         sortOption={sortOption}
         setSortOption={setSortOption}
       />
       
-      <DisplayCampaigns 
-        title="All Campaigns"
-        isLoading={isLoading}
-        campaigns={filteredCampaigns}
-      />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        <DisplayCampaigns 
+          title="All Campaigns"
+          isLoading={isLoading}
+          campaigns={filteredCampaigns}
+        />
+      </motion.div>
     </div>
   )
 }
