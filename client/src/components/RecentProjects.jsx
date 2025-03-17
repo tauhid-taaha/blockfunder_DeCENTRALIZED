@@ -4,18 +4,27 @@ import { useStateContext } from "../context";
 import { Card, CardContent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar } from "@mui/material";
 
 const RecentProjects = () => {
-  const { getRecentProjects } = useStateContext();
-  const [projects, setProjects] = useState([]);
+  const { contract, getCampaigns } = useStateContext();
+  const [recentCampaigns, setRecentCampaigns] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      const recentProjects = await getRecentProjects();
-      setProjects(recentProjects);
+    const fetchCampaigns = async () => {
+      if (!contract) return;
+
+      try {
+        const campaigns = await getCampaigns(contract);
+        // Sort campaigns by newest first (highest pId)
+        const sortedCampaigns = [...campaigns].sort((a, b) => b.pId - a.pId);
+        // Take the first 5 campaigns (most recent)
+        setRecentCampaigns(sortedCampaigns.slice(0, 5));
+      } catch (error) {
+        console.error("❌ Error fetching campaigns:", error);
+      }
     };
 
-    fetchProjects();
-  }, []);
+    fetchCampaigns();
+  }, [contract]); // Fetch campaigns when contract is available
 
   // 🔗 Handle Navigation to Campaign Details Page
   const handleNavigate = (campaign) => {
@@ -43,7 +52,7 @@ const RecentProjects = () => {
 
             {/* Table Body */}
             <TableBody>
-              {projects.map((project, index) => (
+              {recentCampaigns.map((project, index) => (
                 <TableRow
                   key={index}
                   sx={{
@@ -58,7 +67,7 @@ const RecentProjects = () => {
                     {project.title}
                   </TableCell>
                   <TableCell sx={{ color: "#f1c40f" }}>{project.target} ETH</TableCell>
-                  <TableCell sx={{ color: "#4caf50", fontWeight: "bold" }}>{project.collected} ETH</TableCell>
+                  <TableCell sx={{ color: "#4caf50", fontWeight: "bold" }}>{project.amountCollected} ETH</TableCell>
                 </TableRow>
               ))}
             </TableBody>
