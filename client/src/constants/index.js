@@ -31,6 +31,11 @@ export const navlinks = [
     
   },
   {
+    name: "blogs",
+    imgUrl: profile,
+    link: "/blogs",
+  },
+  {
     name: "bookmarks",
     imgUrl: profile,
     link: "/bookmarks",

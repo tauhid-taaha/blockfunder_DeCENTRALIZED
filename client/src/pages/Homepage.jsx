@@ -120,6 +120,14 @@ const Homepage = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-[#008F5B] to-[#00A86B] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </Link>
+            <Link
+              to="/blogs"
+              className="group relative px-8 py-4 bg-gradient-to-r from-[#00A86B] to-[#008F5B] rounded-lg overflow-hidden"
+            >
+              <span className="relative z-10 text-white font-semibold text-lg">Community Blog</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-[#008F5B] to-[#00A86B] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </Link>
           </motion.div>
         </motion.div>
 

@@ -21,6 +21,9 @@ import {
   CryptoNews,
   ForgotPassword,
   ResetPassword,
+  BlogList,
+  BlogDetail,
+  CreateBlog,
 } from "./pages";
 
 const App = () => {
@@ -55,6 +58,9 @@ const App = () => {
           <Route path="/crypto-news" element={<CryptoNews />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/blogs" element={<BlogList />} />
+          <Route path="/blog/:id" element={<BlogDetail />} />
+          <Route path="/create-blog" element={<CreateBlog />} />
         </Routes>
       </div>
     </div>
