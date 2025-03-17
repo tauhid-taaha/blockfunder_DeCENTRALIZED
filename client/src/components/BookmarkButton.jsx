@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
+import { motion } from 'framer-motion';
 
 const BookmarkButton = ({ campaignId, title, image }) => {
   const { isDarkMode } = useTheme();
@@ -42,25 +43,28 @@ const BookmarkButton = ({ campaignId, title, image }) => {
   };
   
   return (
-    <button
+    <motion.button
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.95 }}
       onClick={toggleBookmark}
-      className={`absolute top-2 right-2 p-2 rounded-full ${
-        isDarkMode 
-          ? 'bg-gray-800 bg-opacity-70 hover:bg-gray-700' 
-          : 'bg-white bg-opacity-70 hover:bg-gray-100'
-      } transition-colors z-10`}
+      className="p-2 rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50 transition-colors"
       aria-label={isBookmarked ? "Remove from bookmarks" : "Add to bookmarks"}
     >
-      {isBookmarked ? (
-        <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
-        </svg>
-      ) : (
-        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-        </svg>
-      )}
-    </button>
+      <svg 
+        xmlns="http://www.w3.org/2000/svg" 
+        width="18" 
+        height="18" 
+        viewBox="0 0 24 24" 
+        fill={isBookmarked ? "currentColor" : "none"} 
+        stroke="currentColor" 
+        strokeWidth="2" 
+        strokeLinecap="round" 
+        strokeLinejoin="round" 
+        className={`transition-colors ${isBookmarked ? 'text-yellow-400' : 'text-white'}`}
+      >
+        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+      </svg>
+    </motion.button>
   );
 };
 

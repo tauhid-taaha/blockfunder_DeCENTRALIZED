@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTheme } from '../context/ThemeContext';
+import { motion } from 'framer-motion';
 
 const ProgressBar = ({ current, target }) => {
   const { isDarkMode } = useTheme();
@@ -17,11 +18,13 @@ const ProgressBar = ({ current, target }) => {
           Goal: {target} ETH
         </span>
       </div>
-      <div className={`w-full h-2.5 rounded-full ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
-        <div 
-          className="h-2.5 rounded-full bg-gradient-to-r from-purple-500 to-green-500" 
-          style={{ width: `${percentage}%` }}
-        ></div>
+      <div className={`w-full h-2.5 rounded-full ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-200/50'} overflow-hidden`}>
+        <motion.div 
+          className="h-2.5 rounded-full bg-gradient-to-r from-[#00A86B] to-[#008F5B]"
+          initial={{ width: 0 }}
+          animate={{ width: `${percentage}%` }}
+          transition={{ duration: 1, ease: "easeOut" }}
+        ></motion.div>
       </div>
     </div>
   );
