@@ -57,6 +57,16 @@ export const getBlogById = async (id) => {
   }
 };
 
+export const getBlogsByCampaign = async (campaignId) => {
+  try {
+    const response = await API.get(`/blogs/campaign/${campaignId}`);
+    return response.data.blogs;
+  } catch (error) {
+    console.error('Error fetching blogs by campaign:', error);
+    throw error;
+  }
+};
+
 export const createBlog = async (blogData) => {
   try {
     const response = await API.post('/blogs/create', blogData);

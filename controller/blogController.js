@@ -4,7 +4,7 @@ import userModel from "../models/userModel.js";
 // Create a new blog
 export const createBlogController = async (req, res) => {
   try {
-    const { title, content } = req.body;
+    const { title, content, campaign } = req.body;
     
     // Validations
     if (!title) {
@@ -26,12 +26,23 @@ export const createBlogController = async (req, res) => {
       });
     }
     
-    // Create and save the blog
-    const blog = await new blogModel({
+    // Create blog data object
+    const blogData = {
       title,
       content,
       author: userId
-    }).save();
+    };
+
+    // Add campaign data if provided
+    if (campaign && campaign.campaignId) {
+      blogData.campaign = {
+        campaignId: campaign.campaignId,
+        title: campaign.title
+      };
+    }
+    
+    // Create and save the blog
+    const blog = await new blogModel(blogData).save();
     
     // Populate author details
     const populatedBlog = await blogModel.findById(blog._id).populate('author', 'name email profilePicture');
@@ -300,6 +311,38 @@ export const getUserBlogsController = async (req, res) => {
     res.status(500).send({
       success: false,
       message: "Error in fetching user blogs",
+      error
+    });
+  }
+};
+
+// Get blogs by campaign ID
+export const getBlogsByCampaignController = async (req, res) => {
+  try {
+    const { campaignId } = req.params;
+    
+    if (!campaignId) {
+      return res.status(400).send({
+        success: false,
+        message: "Campaign ID is required"
+      });
+    }
+    
+    const blogs = await blogModel.find({'campaign.campaignId': campaignId})
+      .populate('author', 'name email profilePicture')
+      .populate('comments.user', 'name email profilePicture')
+      .sort({ createdAt: -1 });
+    
+    res.status(200).send({
+      success: true,
+      message: "Blogs for campaign fetched successfully",
+      blogs
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in fetching blogs by campaign",
       error
     });
   }

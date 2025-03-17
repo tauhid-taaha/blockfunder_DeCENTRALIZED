@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { createBlog } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { useStateContext } from '../context/index';
 
 const CreateBlog = () => {
   const { isDarkMode } = useTheme();
@@ -11,15 +12,61 @@ const CreateBlog = () => {
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [selectedCampaign, setSelectedCampaign] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showCampaignResults, setShowCampaignResults] = useState(false);
+  const [campaignSearchResults, setCampaignSearchResults] = useState([]);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { contract, address } = useStateContext();
 
   // Redirect if not logged in
-  React.useEffect(() => {
+  useEffect(() => {
     if (!user) {
       navigate('/login?redirect=/create-blog');
     }
   }, [user, navigate]);
+
+  // Search campaigns
+  const searchCampaigns = async () => {
+    if (!contract) return;
+    setLoading(true);
+    
+    try {
+      const allCampaigns = await contract.call('getCampaigns');
+      
+      const filteredCampaigns = allCampaigns.filter(campaign => 
+        campaign.title.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      
+      const parsedCampaigns = filteredCampaigns.map((campaign, i) => ({
+        id: i,
+        owner: campaign.owner,
+        title: campaign.title,
+        description: campaign.description,
+        target: parseInt(campaign.target._hex) / 10**18,
+        deadline: new Date(parseInt(campaign.deadline._hex) * 1000).toISOString(),
+        collected_amount: parseInt(campaign.collected_amount._hex) / 10**18,
+        image: campaign.image
+      }));
+      
+      setCampaignSearchResults(parsedCampaigns);
+      setShowCampaignResults(true);
+    } catch (error) {
+      console.error('Error searching campaigns:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCampaignSelect = (campaign) => {
+    setSelectedCampaign(campaign);
+    setShowCampaignResults(false);
+  };
+
+  const clearSelectedCampaign = () => {
+    setSelectedCampaign(null);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,11 +86,22 @@ const CreateBlog = () => {
       setLoading(true);
       setError('');
       
-      // Create new blog
-      const newBlog = await createBlog({
+      // Create blog data
+      const blogData = {
         title,
         content
-      });
+      };
+      
+      // Add campaign data if selected
+      if (selectedCampaign) {
+        blogData.campaign = {
+          campaignId: selectedCampaign.id.toString(),
+          title: selectedCampaign.title
+        };
+      }
+      
+      // Create new blog
+      const newBlog = await createBlog(blogData);
       
       // Redirect to the new blog
       navigate(`/blog/${newBlog._id}`);
@@ -99,80 +157,144 @@ const CreateBlog = () => {
           )}
           
           <form onSubmit={handleSubmit}>
-            <div className="mb-6">
+            <div className="mb-5">
               <label 
                 htmlFor="title" 
-                className={`block mb-2 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                className={`block mb-2 font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
               >
-                Blog Title
+                Title
               </label>
               <input
                 type="text"
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className={`w-full px-4 py-2 rounded-lg ${
+                className={`w-full px-4 py-3 rounded-lg focus:outline-none ${
                   isDarkMode 
-                    ? 'bg-gray-800 text-white border-gray-700 focus:border-[#00A86B]' 
-                    : 'bg-white text-gray-800 border-gray-300 focus:border-[#00A86B]'
-                } border focus:ring-2 focus:ring-[#00A86B]/50 outline-none transition-colors`}
-                placeholder="Enter a catchy title"
-                required
+                    ? 'bg-[#13131a] border border-gray-700 text-white' 
+                    : 'bg-gray-50 border border-gray-200 text-gray-800'
+                }`}
+                placeholder="Enter a catchy title for your blog post"
               />
             </div>
             
-            <div className="mb-6">
+            {/* Campaign Selection */}
+            <div className="mb-5">
+              <label 
+                className={`block mb-2 font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+              >
+                Tag a Campaign (Optional)
+              </label>
+              
+              {selectedCampaign ? (
+                <div className={`flex items-center justify-between p-3 rounded-lg mb-2 ${
+                  isDarkMode ? 'bg-[#2c2c34] border border-gray-700' : 'bg-gray-100 border border-gray-200'
+                }`}>
+                  <div>
+                    <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                      {selectedCampaign.title}
+                    </p>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      {selectedCampaign.description.substring(0, 100)}...
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={clearSelectedCampaign}
+                    className={`text-red-500 hover:text-red-600`}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+              ) : (
+                <div className="relative">
+                  <div className="flex">
+                    <input
+                      type="text"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className={`w-full px-4 py-3 rounded-l-lg focus:outline-none ${
+                        isDarkMode 
+                          ? 'bg-[#13131a] border border-gray-700 text-white' 
+                          : 'bg-gray-50 border border-gray-200 text-gray-800'
+                      }`}
+                      placeholder="Search for a campaign"
+                    />
+                    <button
+                      type="button"
+                      onClick={searchCampaigns}
+                      className="px-4 py-3 bg-[#00A86B] text-white rounded-r-lg"
+                    >
+                      Search
+                    </button>
+                  </div>
+                  
+                  {showCampaignResults && (
+                    <div className={`absolute z-10 mt-1 w-full rounded-lg overflow-auto max-h-60 ${
+                      isDarkMode ? 'bg-[#2c2c34] border border-gray-700' : 'bg-white border border-gray-200'
+                    }`}>
+                      {loading ? (
+                        <p className={`p-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                          Searching...
+                        </p>
+                      ) : campaignSearchResults.length === 0 ? (
+                        <p className={`p-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                          No campaigns found
+                        </p>
+                      ) : (
+                        campaignSearchResults.map((campaign) => (
+                          <div
+                            key={campaign.id}
+                            className={`p-3 cursor-pointer hover:${isDarkMode ? 'bg-[#3c3c44]' : 'bg-gray-100'} transition-colors`}
+                            onClick={() => handleCampaignSelect(campaign)}
+                          >
+                            <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                              {campaign.title}
+                            </p>
+                            <p className={`text-sm truncate ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                              {campaign.description.substring(0, 100)}...
+                            </p>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+            
+            <div className="mb-5">
               <label 
                 htmlFor="content" 
-                className={`block mb-2 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                className={`block mb-2 font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
               >
-                Blog Content
+                Content
               </label>
               <textarea
                 id="content"
-                rows="12"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className={`w-full px-4 py-2 rounded-lg ${
+                className={`w-full px-4 py-3 rounded-lg focus:outline-none min-h-[200px] ${
                   isDarkMode 
-                    ? 'bg-gray-800 text-white border-gray-700 focus:border-[#00A86B]' 
-                    : 'bg-white text-gray-800 border-gray-300 focus:border-[#00A86B]'
-                } border focus:ring-2 focus:ring-[#00A86B]/50 outline-none transition-colors`}
-                placeholder="Write your blog content here... You can use multiple paragraphs."
-                required
-              ></textarea>
-              <p className={`mt-2 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                Tip: Use line breaks to separate paragraphs.
-              </p>
+                    ? 'bg-[#13131a] border border-gray-700 text-white' 
+                    : 'bg-gray-50 border border-gray-200 text-gray-800'
+                }`}
+                placeholder="Share your thoughts..."
+              />
             </div>
             
-            <div className="flex gap-4">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                type="submit"
-                disabled={loading}
-                className={`px-6 py-3 bg-gradient-to-r from-[#00A86B] to-[#008F5B] text-white rounded-lg font-medium ${
-                  loading ? 'opacity-70 cursor-not-allowed' : ''
-                }`}
-              >
-                {loading ? 'Publishing...' : 'Publish Blog'}
-              </motion.button>
-              
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                type="button"
-                onClick={() => navigate('/blogs')}
-                className={`px-6 py-3 rounded-lg font-medium ${
-                  isDarkMode 
-                    ? 'bg-gray-800 text-white hover:bg-gray-700' 
-                    : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-                }`}
-              >
-                Cancel
-              </motion.button>
-            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full px-4 py-3 bg-[#00A86B] text-white rounded-lg font-medium hover:bg-[#008c5a] transition-colors
+                ${loading ? 'opacity-70 cursor-not-allowed' : ''}
+              `}
+            >
+              {loading ? 'Publishing...' : 'Publish Post'}
+            </button>
           </form>
         </motion.div>
       </div>

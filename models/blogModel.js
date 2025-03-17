@@ -16,6 +16,16 @@ const blogSchema = new mongoose.Schema(
       ref: "users",
       required: true,
     },
+    campaign: {
+      campaignId: {
+        type: String,
+        required: false,
+      },
+      title: {
+        type: String,
+        required: false,
+      },
+    },
     likes: {
       type: Number,
       default: 0,

@@ -378,6 +378,26 @@ const BlogDetail = () => {
               </div>
             )}
           </div>
+
+          {/* Display campaign link if available */}
+          {blog.campaign && blog.campaign.campaignId && (
+            <div className={`mt-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-gray-100 border border-gray-200'}`}>
+              <div className="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`mr-2 ${isDarkMode ? 'text-green-400' : 'text-green-500'}`}>
+                  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                </svg>
+                <div>
+                  <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Related Campaign:</p>
+                  <Link 
+                    to={`/campaign-details/${blog.campaign.campaignId}`} 
+                    className={`font-medium ${isDarkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'}`}
+                  >
+                    {blog.campaign.title}
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
         </motion.div>
       </div>
     </div>

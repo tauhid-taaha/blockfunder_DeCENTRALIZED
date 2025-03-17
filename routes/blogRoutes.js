@@ -8,7 +8,8 @@ import {
   deleteBlogController,
   addCommentController,
   likeBlogController,
-  getUserBlogsController
+  getUserBlogsController,
+  getBlogsByCampaignController
 } from "../controller/blogController.js";
 
 const router = express.Router();
@@ -24,6 +25,9 @@ router.get("/user/blogs", requireSignIn, getUserBlogsController);
 
 // Get specific user's blogs (public)
 router.get("/user/:userId", getUserBlogsController);
+
+// Get blogs by campaign ID (public)
+router.get("/campaign/:campaignId", getBlogsByCampaignController);
 
 // Get single blog (public)
 router.get("/:id", getSingleBlogController);
