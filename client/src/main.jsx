@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
+import { Toaster } from 'react-hot-toast';
 import "./index.css";
 import { StateContextProvider } from "./context";
 import { ThemeProvider } from "./context/ThemeContext";
@@ -27,6 +28,7 @@ root.render(
             }}
           >
             <App />
+            <Toaster position="top-right" />
           </Auth0Provider>
         </ThemeProvider>
       </StateContextProvider>

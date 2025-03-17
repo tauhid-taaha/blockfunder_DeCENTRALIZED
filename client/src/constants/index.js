@@ -28,7 +28,11 @@ export const navlinks = [
     name: "withdraw",
     imgUrl: withdraw,
     link: "/donated-campaigns",
-    
+  },
+  {
+    name: "community",
+    imgUrl: profile,
+    link: "/community",
   },
   {
     name: "bookmarks",

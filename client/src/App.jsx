@@ -21,6 +21,9 @@ import {
   CryptoNews,
   ForgotPassword,
   ResetPassword,
+  Community,
+  PostDetails,
+  EditPost,
 } from "./pages";
 
 const App = () => {
@@ -55,6 +58,9 @@ const App = () => {
           <Route path="/crypto-news" element={<CryptoNews />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/community/post/:id" element={<PostDetails />} />
+          <Route path="/community/edit/:id" element={<EditPost />} />
         </Routes>
       </div>
     </div>

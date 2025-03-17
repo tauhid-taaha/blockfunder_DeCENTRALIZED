@@ -29,6 +29,33 @@ const Navbar = () => {
     navigate("/login"); // Redirect to login page
   };
 
+  const navLinks = [
+    {
+      name: 'campaign',
+      link: '/',
+    },
+    {
+      name: 'News',
+      link: '/news',
+    },
+    {
+      name: 'About',
+      link: '/about',
+    },
+    {
+      name: 'Crypto News',
+      link: '/crypto-news',
+    },
+    {
+      name: 'Crypto Rates',
+      link: '/crypto-rates',
+    },
+    {
+      name: 'Community',
+      link: '/community',
+    },
+  ];
+
   return (
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
       <div className={`lg:flex-1 flex flex-row max-w-[458px] py-2 pl-4 pr-2 h-[52px] ${isDarkMode ? 'bg-[#1c1c24]' : 'bg-white border border-gray-200'} rounded-[100px]`}>

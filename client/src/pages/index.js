@@ -15,3 +15,11 @@ export { default as CryptoRates } from './CryptoRates';
 export { default as CryptoNews } from './CryptoNews';
 export { default as ForgotPassword } from './ForgotPassword';
 export { default as ResetPassword } from './ResetPassword';
+export { default as Community } from './Community';
+export { default as PostDetails } from './PostDetails';
+export { default as EditPost } from './EditPost';
+// Commented out imports for files that don't exist yet
+// export { default as Details } from './Details';
+// export { default as News } from './News';
+// export { default as About } from './About';
+// export { default as Bookmarks } from './Bookmarks';
