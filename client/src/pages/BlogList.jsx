@@ -77,6 +77,10 @@ const BlogList = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
+  const handleCampaignClick = (campaignId) => {
+    navigate(`/home?campaign=${campaignId}`);
+  };
+
   return (
     <div className={`min-h-screen ${isDarkMode ? 'bg-[#13131a]' : 'bg-gray-50'}`}>
       <div className="max-w-6xl mx-auto px-4 py-8">
@@ -261,15 +265,15 @@ const BlogList = () => {
                   </Link>
                   
                   {blog.campaign && blog.campaign.campaignId && (
-                    <Link 
-                      to={`/campaign-details/${blog.campaign.campaignId}`}
+                    <button 
+                      onClick={() => handleCampaignClick(blog.campaign.campaignId)}
                       className="inline-flex items-center mb-2 bg-gradient-to-r from-[#00A86B] to-[#00805e] text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M16.707 10.293a1 1 0 010 1.414l-6 6a1 1 0 01-1.414 0l-6-6a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l4.293-4.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                       {blog.campaign.title}
-                    </Link>
+                    </button>
                   )}
                   
                   <p className={`text-sm mb-4 line-clamp-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>

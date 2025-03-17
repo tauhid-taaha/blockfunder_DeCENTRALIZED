@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
 import { DisplayCampaigns, CampaignFilters } from '../components';
 import { useStateContext } from '../context'
@@ -8,6 +9,8 @@ const Home = () => {
   const [campaigns, setCampaigns] = useState([]);
   const [filteredCampaigns, setFilteredCampaigns] = useState([]);
   const [sortOption, setSortOption] = useState('newest');
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const { address, contract, getCampaigns } = useStateContext();
 
@@ -21,6 +24,18 @@ const Home = () => {
     setFilteredCampaigns([...data].sort((a, b) => b.pId - a.pId));
   
     setIsLoading(false);
+    
+    // Check if there's a campaign parameter in the URL
+    const campaignId = searchParams.get('campaign');
+    if (campaignId && data.length > 0) {
+      // Find the campaign by ID
+      const selectedCampaign = data.find(campaign => campaign.pId === parseInt(campaignId));
+      
+      if (selectedCampaign) {
+        // Navigate to campaign details with the campaign data
+        navigate(`/campaign-details/${selectedCampaign.title}`, { state: selectedCampaign });
+      }
+    }
   };
   
   

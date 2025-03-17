@@ -106,6 +106,10 @@ const BlogDetail = () => {
     }
   };
 
+  const handleCampaignClick = (campaignId) => {
+    navigate(`/home?campaign=${campaignId}`);
+  };
+
   if (loading) {
     return (
       <div className={`min-h-screen ${isDarkMode ? 'bg-[#13131a]' : 'bg-gray-50'} flex justify-center items-center`}>
@@ -388,12 +392,12 @@ const BlogDetail = () => {
                 </svg>
                 <div>
                   <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Related Campaign:</p>
-                  <Link 
-                    to={`/campaign-details/${blog.campaign.campaignId}`} 
+                  <button 
+                    onClick={() => handleCampaignClick(blog.campaign.campaignId)}
                     className={`font-medium ${isDarkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'}`}
                   >
                     {blog.campaign.title}
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>
