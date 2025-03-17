@@ -55,6 +55,12 @@ const Homepage = () => {
         >
           Check Crypto Rates
         </Link>
+        <Link
+          to="/crypto-news"
+          className="bg-gradient-to-r from-[#006A4E] to-[#004F39] py-4 px-6 rounded-lg text-white text-lg font-medium shadow-lg hover:shadow-xl hover:scale-105 transition-transform"
+        >
+          Crypto News
+        </Link>
       </div>
 
       {/* Video Section */}

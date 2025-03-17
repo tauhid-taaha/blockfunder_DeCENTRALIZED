@@ -322,3 +322,42 @@ export const getCryptoRatesController = async (req, res) => {
   }
 };
 
+export const getCryptoNewsController = async (req, res) => {
+  try {
+    const response = await axios.get(
+      'https://min-api.cryptocompare.com/data/v2/news/?categories=Cryptocurrency,Blockchain&excludeCategories=Sponsored',
+      {
+        params: {
+          lang: 'EN',
+          sortOrder: 'latest'
+        }
+      }
+    );
+
+    const newsData = response.data.Data.map(article => ({
+      id: article.id,
+      title: article.title,
+      body: article.body,
+      source: article.source,
+      url: article.url,
+      imageUrl: article.imageurl,
+      publishedOn: article.published_on,
+      categories: article.categories,
+      sourceInfo: article.source_info
+    }));
+
+    res.status(200).send({
+      success: true,
+      message: "Crypto news fetched successfully",
+      data: newsData
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error fetching crypto news",
+      error: error.message
+    });
+  }
+};
+

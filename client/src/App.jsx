@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Routes, Route } from 'react-router-dom';
 import { useTheme } from "./context/ThemeContext";
 
 import { Sidebar, Navbar } from "./components";
@@ -17,7 +17,10 @@ import {
   Login,
   ChatbotPage,
   BookmarkedCampaigns,
-  CryptoRates
+  CryptoRates,
+  CryptoNews,
+  ForgotPassword,
+  ResetPassword,
 } from "./pages";
 
 const App = () => {
@@ -49,6 +52,9 @@ const App = () => {
           <Route path="/campaign-details/:id" element={<CampaignDetails />} />
           <Route path="/chatbot" element={<Chatbot_Assistant />} />
           <Route path="/crypto-rates" element={<CryptoRates />} />
+          <Route path="/crypto-news" element={<CryptoNews />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
         </Routes>
       </div>
     </div>
