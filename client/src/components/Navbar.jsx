@@ -5,6 +5,7 @@ import { logo, menu, search, thirdweb } from "../assets";
 import { navlinks } from "../constants";
 import { ThemeToggle } from "./index";
 import { useTheme } from "../context/ThemeContext";
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -13,9 +14,10 @@ const Navbar = () => {
   const [toggleDrawer, setToggleDrawer] = useState(false);
   const { connect, address } = useStateContext();
   const { isDarkMode } = useTheme();
+  const { user, logout } = useAuth();
   
-  // Check if user is logged in
-  const isAuthenticated = !!localStorage.getItem("token");
+  // Check if user is logged in using AuthContext
+  const isAuthenticated = !!user;
 
   const handleSearch = () => {
     if (searchQuery.trim() !== "") {
@@ -24,8 +26,7 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); // Remove token from local storage
-    alert("Logged out successfully!");
+    logout();
     navigate("/login"); // Redirect to login page
   };
 
