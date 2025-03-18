@@ -6,6 +6,7 @@ import { navlinks } from "../constants";
 import { ThemeToggle } from "./index";
 import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../context/AuthContext";
+import { FaInfoCircle } from "react-icons/fa";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -64,9 +65,10 @@ const Navbar = () => {
         
         <button
           onClick={handleShowWelcome}
-          className="bg-[#8c6dfd] text-white px-4 py-2 rounded-[10px] font-epilogue font-medium hover:bg-[#7a5aed]"
+          className={`${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-700'} p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200`}
+          title="Welcome Guide"
         >
-          Welcome Guide
+          <FaInfoCircle size={16} />
         </button>
 
         <button
