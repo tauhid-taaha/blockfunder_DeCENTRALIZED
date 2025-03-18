@@ -5,21 +5,19 @@ import { money } from "../assets";
 import { CustomButton, FormField } from "../components";
 import { checkIfImage } from "../utils";
 import { useStateContext } from "../context";
-import { useTheme } from "../context/ThemeContext";
 
 const CreateCampaign = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const { createCampaign } = useStateContext();
-  const { isDarkMode } = useTheme();
-  
+
   const [form, setForm] = useState({
     name: "",
     title: "",
     description: "",
     target: "",
     deadline: "",
-    image: ""
+    image: "",
   });
 
   const handleFormFieldChange = (fieldName, e) => {
@@ -46,23 +44,15 @@ const CreateCampaign = () => {
   };
 
   return (
-    <div className={`min-h-screen p-8 ${isDarkMode 
-      ? 'bg-gradient-to-br from-[#1e1e2d] via-[#23233d] to-[#181a21] text-white' 
-      : 'bg-gradient-to-br from-gray-100 via-gray-50 to-white text-gray-800'}`}>
-      <div className={`w-full max-w-4xl mx-auto flex flex-col rounded-lg sm:p-10 p-6 shadow-lg ${
-        isDarkMode ? 'bg-[#1c1c24]' : 'bg-white'
-      }`}>
+    <div className="min-h-screen p-8 bg-gradient-to-br from-[#1e1e2d] via-[#23233d] to-[#181a21] flex justify-center items-center text-white">
+      <div className="bg-[#1c1c24] w-full max-w-4xl flex flex-col rounded-lg sm:p-10 p-6 shadow-lg">
         {isLoading && (
           <div className="text-center text-lg text-[#57eba3]">Loading...</div>
         )}
 
         {/* Header */}
-        <div className={`flex justify-center items-center py-4 rounded-lg mb-8 ${
-          isDarkMode ? 'bg-[#3a3a43]' : 'bg-gray-100'
-        }`}>
-          <h1 className={`font-epilogue font-bold text-2xl sm:text-3xl ${
-            isDarkMode ? 'text-white' : 'text-gray-800'
-          }`}>
+        <div className="flex justify-center items-center py-4 bg-[#3a3a43] rounded-lg mb-8">
+          <h1 className="font-epilogue font-bold text-2xl sm:text-3xl text-white">
             Start a Campaign
           </h1>
         </div>
@@ -117,7 +107,7 @@ const CreateCampaign = () => {
               handleChange={(e) => handleFormFieldChange("deadline", e)}
             />
           </div>
-          
+
           <FormField
             labelName="Campaign Image *"
             placeholder="Place image URL of your campaign"
@@ -140,3 +130,4 @@ const CreateCampaign = () => {
 };
 
 export default CreateCampaign;
+

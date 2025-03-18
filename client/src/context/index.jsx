@@ -12,6 +12,7 @@ export const StateContextProvider = ({ children }) => {
   try {
     const { contract } = useContract("0x8F0878E53eCfC1B271f829c12f78c19E6ED44549");
     const { mutateAsync: createCampaign } = useContractWrite(contract, 'create_campaign');
+
     const address = useAddress();
     const connect = useMetamask();
 
@@ -27,7 +28,7 @@ export const StateContextProvider = ({ children }) => {
             form.image,
           ],
         });
-
+  
         console.log("contract call success", data)
       } catch (error) {
         console.log("contract call failure", error)

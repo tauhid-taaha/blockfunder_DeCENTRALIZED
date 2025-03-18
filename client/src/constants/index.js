@@ -1,48 +1,53 @@
 import {
-  createCampaign,
-  dashboard,
-  logout,
-  payment,
-  profile,
-  withdraw,
-} from "../assets";
-import { createThirdwebClient } from "thirdweb";
-const CLIENT_ID = "a73644753ab5661818da3ad6d347bd27";
+  Dashboard,
+  Campaign,
+  CreditCard,
+  LocalAtm,
+  Article,
+  Bookmark,
+  AccountCircle,
+  VolunteerActivism, // ✅ Added for "Donate" (Solid Hands Icon)
+} from "@mui/icons-material"; // ✅ Using Material UI Icons
+
 export const navlinks = [
   {
-    name: "dashboard",
-    imgUrl: dashboard,
+    name: "Dashboard",
+    imgUrl: "Dashboard", // ✅ Store MUI icon name as a string
     link: "/home",
   },
   {
-    name: "campaign",
-    imgUrl: createCampaign,
+    name: "Campaign",
+    imgUrl: "Campaign",
     link: "/create-campaign",
   },
   {
-    name: "payment",
-    imgUrl: payment,
+    name: "Payment",
+    imgUrl: "CreditCard",
     link: "/chatbot",
   },
   {
-    name: "withdraw",
-    imgUrl: withdraw,
+    name: "Withdraw",
+    imgUrl: "LocalAtm",
     link: "/donated-campaigns",
-    
   },
   {
-    name: "blogs",
-    imgUrl: profile,
+    name: "Blogs",
+    imgUrl: "Article",
     link: "/blogs",
   },
   {
-    name: "bookmarks",
-    imgUrl: profile,
+    name: "Bookmarks",
+    imgUrl: "Bookmark",
     link: "/bookmarks",
   },
   {
-    name: "profile",
-    imgUrl: profile,
+    name: "Profile",
+    imgUrl: "AccountCircle",
     link: "/profile",
-  }
+  },
+  {
+    name: "Donate",
+    imgUrl: "VolunteerActivism",
+    link: "/donate",
+  },
 ];

@@ -1,52 +1,67 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useTheme } from '../context/ThemeContext';
-
-import { logo, sun } from '../assets';
-import { navlinks } from '../constants';
-
-const Icon = ({ styles, name, imgUrl, isActive, disabled, handleClick }) => (
-  <div className={`w-[48px] h-[48px] rounded-[10px] ${isActive && isActive === name && 'bg-[#2c2f32]'} flex justify-center items-center ${!disabled && 'cursor-pointer'} ${styles}`} onClick={handleClick}>
-    {!isActive ? (
-      <img src={imgUrl} alt="fund_logo" className="w-1/2 h-1/2" />
-    ) : (
-      <img src={imgUrl} alt="fund_logo" className={`w-1/2 h-1/2 ${isActive !== name && 'grayscale'}`} />
-    )}
-  </div>
-)
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
+import { Box, IconButton, Tooltip } from "@mui/material";
+import * as MuiIcons from "@mui/icons-material"; // ✅ Import all MUI icons dynamically
+import { navlinks } from "../constants";
+import { logo } from "../assets";
 
 const Sidebar = () => {
   const navigate = useNavigate();
-  const [isActive, setIsActive] = useState('dashboard');
+  const [isActive, setIsActive] = useState("Dashboard");
   const { isDarkMode } = useTheme();
 
   return (
-    <div className="flex justify-between items-center flex-col sticky top-5 h-[93vh]">
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        position: "sticky",
+        top: "5px",
+        height: "93vh",
+        backgroundColor: isDarkMode ? "#1c1c24" : "#ffffff",
+        padding: "16px",
+        borderRadius: "20px",
+        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+      }}
+    >
+      {/* Logo */}
       <Link to="/">
-        <Icon styles={`w-[52px] h-[52px] ${isDarkMode ? 'bg-[#2c2f32]' : 'bg-white shadow-md'}`} imgUrl={logo} />
+        <IconButton sx={{ width: 56, height: 56, bgcolor: isDarkMode ? "#2c2f32" : "#fff", borderRadius: "12px", boxShadow: 2 }}>
+          <img src={logo} alt="Logo" style={{ width: "50%", height: "50%" }} />
+        </IconButton>
       </Link>
 
-      <div className={`flex-1 flex flex-col justify-between items-center ${isDarkMode ? 'bg-[#1c1c24]' : 'bg-white'} rounded-[20px] w-[76px] py-4 mt-12 shadow-md`}>
-        <div className="flex flex-col justify-center items-center gap-3">
-          {navlinks.map((link) => (
-            <Icon 
-              key={link.name}
-              {...link}
-              isActive={isActive}
-              handleClick={() => {
-                if(!link.disabled) {
+      {/* Navigation Icons */}
+      <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column", gap: 3, marginTop: "24px" }}>
+        {navlinks.map((link) => {
+          const IconComponent = MuiIcons[link.imgUrl]; // ✅ Dynamically map icon name to MUI component
+
+          return (
+            <Tooltip key={link.name} title={link.name} placement="right" arrow>
+              <IconButton
+                sx={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: "12px",
+                  color: isActive === link.name ? "#fff" : "#ccc",
+                  backgroundColor: isActive === link.name ? "#1dc071" : "transparent",
+                  "&:hover": { backgroundColor: "#00e6e6", transform: "scale(1.1)" },
+                }}
+                onClick={() => {
                   setIsActive(link.name);
                   navigate(link.link);
-                }
-              }}
-            />
-          ))}
-        </div>
+                }}
+              >
+                {IconComponent && <IconComponent fontSize="large" />} {/* ✅ Renders the MUI icon dynamically */}
+              </IconButton>
+            </Tooltip>
+          );
+        })}
+      </Box>
+    </Box>
+  );
+};
 
-        {/* <Icon styles="bg-[#1c1c24] shadow-secondary" imgUrl={sun} /> */}
-      </div>
-    </div>
-  )
-}
-
-export default Sidebar
+export default Sidebar;

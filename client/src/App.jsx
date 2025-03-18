@@ -25,6 +25,7 @@ import {
   BlogList,
   BlogDetail,
   CreateBlog,
+  CryptoDashboard
 } from "./pages";
 
 const App = () => {
@@ -85,7 +86,7 @@ const App = () => {
           <Route path="/create-campaign" element={<CreateCampaign />} />
           <Route path="/campaign-details/:id" element={<CampaignDetails />} />
           <Route path="/chatbot" element={<Chatbot_Assistant />} />
-          <Route path="/crypto-rates" element={<CryptoRates />} />
+          <Route path="/crypto-rates" element={<CryptoDashboard />} />
           <Route path="/crypto-news" element={<CryptoNews />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />

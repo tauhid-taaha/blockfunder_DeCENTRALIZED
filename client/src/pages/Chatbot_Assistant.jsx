@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTheme } from "../context/ThemeContext";
+import { ChatBubbleOutline } from "@mui/icons-material";
+import { Box, Typography, Fab } from "@mui/material";
 
 const faqs = [
   {
@@ -35,40 +37,39 @@ const Chatbot_Assistant = () => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredFaqs, setFilteredFaqs] = useState(faqs);
+  const [chatText, setChatText] = useState("Need help?");
 
+  // Chat text animation loop
   useEffect(() => {
-    const botpressScript = document.createElement("script");
-    botpressScript.src = "https://cdn.botpress.cloud/webchat/v2.2/inject.js";
-    botpressScript.async = true;
+    const texts = ["Ask me anything!", "Need help?", "Chat with me!"];
+    let index = 0;
+    const interval = setInterval(() => {
+      setChatText(texts[index]);
+      index = (index + 1) % texts.length;
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
-    const configScript = document.createElement("script");
-    configScript.src =
-      "https://files.bpcontent.cloud/2025/01/01/14/20250101140326-75SDRKJZ.js";
-    configScript.async = true;
-
-    botpressScript.onload = () => {
-      if (window.botpressWebChat) {
-        window.botpressWebChat.init({
-          hostUrl: "https://cdn.botpress.cloud/webchat/v2.3",
-          botId: "177bb07c-25e7-4702-9587-0a3a32701aae",
-          configUrl:
-            "https://files.bpcontent.cloud/2025/01/01/14/20250101140326-9ETS39NY.json",
-          botName: "Blockchain Assistant",
-          enableReset: true,
-          enableTranscriptDownload: true,
-          showPoweredBy: false,
-        });
-      }
-    };
-
-    document.body.appendChild(botpressScript);
-    document.body.appendChild(configScript);
-
+  // ✅ Embed Chatbase Chatbot
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://www.chatbase.co/embed.min.js";
+    script.id = "hpXRnHUypnv4SHnBylh1I"; // Your Chatbase bot ID
+    script.domain = "www.chatbase.co";
+    document.body.appendChild(script);
+  
+    // Wait for Chatbase to load, then hide its default button
+    setTimeout(() => {
+      const chatbaseButton = document.querySelector("iframe[title='Chatbot']");
+      if (chatbaseButton) chatbaseButton.style.display = "none";  // Hides default Chatbase button
+    }, 2000);  // Give it 2 seconds to ensure it's loaded before hiding
+  
     return () => {
-      document.body.removeChild(botpressScript);
-      document.body.removeChild(configScript);
+      document.body.removeChild(script);
     };
   }, []);
+  
+   
 
   useEffect(() => {
     setFilteredFaqs(
@@ -83,46 +84,39 @@ const Chatbot_Assistant = () => {
   };
 
   return (
-    <div className={`min-h-screen p-6 ${
-      isDarkMode 
-        ? 'bg-gradient-to-br from-[#1e1e2d] via-[#23233d] to-[#181a21] text-white' 
-        : 'bg-gradient-to-br from-gray-100 via-gray-50 to-white text-gray-800'
-    }`}>
+    <div
+      className={`min-h-screen p-6 ${
+        isDarkMode
+          ? "bg-gradient-to-br from-[#1e1e2d] via-[#23233d] to-[#181a21] text-white"
+          : "bg-gradient-to-br from-gray-100 via-gray-50 to-white text-gray-800"
+      }`}
+    >
       {/* Header */}
       <div className="text-center mb-12">
-        <h1 className={`text-4xl font-extrabold ${
-          isDarkMode ? 'text-[#9b73d3]' : 'text-purple-600'
-        }`}>
+        <h1
+          className={`text-4xl font-extrabold ${
+            isDarkMode ? "text-[#9b73d3]" : "text-purple-600"
+          }`}
+        >
           Blockchain Info
         </h1>
-        <p className={`text-lg mt-4 ${
-          isDarkMode ? 'text-gray-400' : 'text-gray-600'
-        }`}>
+        <p
+          className={`text-lg mt-4 ${
+            isDarkMode ? "text-gray-400" : "text-gray-600"
+          }`}
+        >
           Learn about Blockchain and its use in fundraising through FAQs or chat
           with our assistant!
         </p>
       </div>
 
-      {/* Search Bar */}
-      <div className="max-w-4xl mx-auto mb-8">
-        <input
-          type="text"
-          placeholder="Search FAQs..."
-          className={`w-full p-3 rounded-lg ${
-            isDarkMode 
-              ? 'bg-[#2d2d3d] text-white border border-[#3a3a4a]' 
-              : 'bg-white text-gray-800 border border-gray-300'
-          } focus:outline-none focus:border-[#57eba3]`}
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-
       {/* FAQ Section */}
       <div className="max-w-4xl mx-auto mb-16">
-        <h2 className={`text-2xl font-bold mb-6 ${
-          isDarkMode ? 'text-[#57eba3]' : 'text-green-600'
-        }`}>
+        <h2
+          className={`text-2xl font-bold mb-6 ${
+            isDarkMode ? "text-[#57eba3]" : "text-green-600"
+          }`}
+        >
           Frequently Asked Questions
         </h2>
         <div className="space-y-4">
@@ -130,49 +124,75 @@ const Chatbot_Assistant = () => {
             <div
               key={index}
               className={`p-6 rounded-lg shadow-lg cursor-pointer border transition-all duration-300 ease-in-out transform hover:scale-105 ${
-                isDarkMode 
-                  ? `bg-[#2d2d3d] ${activeIndex === index ? "border-[#57eba3]" : "border-[#3a3a4a]"}` 
-                  : `bg-white ${activeIndex === index ? "border-green-500" : "border-gray-200"}`
+                isDarkMode
+                  ? `bg-[#2d2d3d] ${
+                      activeIndex === index ? "border-[#57eba3]" : "border-[#3a3a4a]"
+                    }`
+                  : `bg-white ${
+                      activeIndex === index ? "border-green-500" : "border-gray-200"
+                    }`
               }`}
               onClick={() => toggleFAQ(index)}
             >
               <h3 className="text-lg font-semibold flex justify-between items-center">
                 {faq.question}
-                <button className={`ml-2 p-1 rounded-full focus:outline-none ${
-                  isDarkMode 
-                    ? 'text-[#57eba3] bg-[#1e1e2d]' 
-                    : 'text-green-600 bg-gray-100'
-                }`}>
+                <button
+                  className={`ml-2 p-1 rounded-full focus:outline-none ${
+                    isDarkMode ? "text-[#57eba3] bg-[#1e1e2d]" : "text-green-600 bg-gray-100"
+                  }`}
+                >
                   {activeIndex === index ? "-" : "+"}
                 </button>
               </h3>
               {activeIndex === index && (
-                <p className={`mt-4 pt-4 border-t ${
-                  isDarkMode 
-                    ? 'text-gray-300 border-[#3a3a4a]' 
-                    : 'text-gray-600 border-gray-200'
-                }`}>{faq.answer}</p>
+                <p
+                  className={`mt-4 pt-4 border-t ${
+                    isDarkMode
+                      ? "text-gray-300 border-[#3a3a4a]"
+                      : "text-gray-600 border-gray-200"
+                  }`}
+                >
+                  {faq.answer}
+                </p>
               )}
             </div>
           ))}
         </div>
       </div>
 
-      {/* Chatbot Section */}
-      <div className="max-w-4xl mx-auto text-center">
-        <h2 className={`text-2xl font-bold mb-4 ${
-          isDarkMode ? 'text-[#57eba3]' : 'text-green-600'
-        }`}>
-          Chat with Steve - Your Blockchain Assistant
-        </h2>
-        <p className={`mb-6 ${
-          isDarkMode ? 'text-gray-400' : 'text-gray-600'
-        }`}>
-          Have more personalized questions? Talk to Steve using the message icon
-          on the right.
-        </p>
-       
-      </div>
+      {/* Chatbot Floating Button */}
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 80,
+          right: 16,
+          textAlign: "center",
+        }}
+      >
+        <Typography
+          variant="subtitle1"
+          sx={{ color: "#57eba3", fontWeight: "bold", mb: 1, opacity: 0.8 }}
+        >
+          {chatText}
+        </Typography>
+      </Box>
+
+      <Fab
+  color="primary"
+  sx={{
+    position: "fixed",
+    bottom: 16,
+    right: 16,
+    bgcolor: "#57eba3",
+    color: "#fff",
+    width: "70px",
+    height: "70px",
+    opacity: 0, // ⬅️ Makes it invisible
+    pointerEvents: "none", // ⬅️ Prevents clicking
+  }}
+>
+  <ChatBubbleOutline sx={{ fontSize: "40px" }} />
+</Fab>
     </div>
   );
 };
