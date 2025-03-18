@@ -4,6 +4,7 @@ import { useAuth } from './context/AuthContext';
 import { useTheme } from "./context/ThemeContext";
 
 import { Sidebar, Navbar } from "./components";
+import WelcomePopup from "./components/WelcomePopup";
 import {
   CampaignDetails,
   CreateCampaign,
@@ -63,6 +64,9 @@ const App = () => {
 
   return (
     <div className={`relative sm:-8 p-4 ${isDarkMode ? 'bg-[#13131a]' : 'bg-gray-100'} min-h-screen flex flex-row`}>
+      {/* Welcome Popup */}
+      <WelcomePopup />
+
       {/* Sidebar */}
       <div className="sm:flex hidden mr-10 relative">
         <Sidebar />

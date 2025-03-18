@@ -30,6 +30,12 @@ const Navbar = () => {
     navigate("/login"); // Redirect to login page
   };
 
+  const handleShowWelcome = () => {
+    if (window.showWelcomePopup) {
+      window.showWelcomePopup();
+    }
+  };
+
   return (
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
       <div className={`lg:flex-1 flex flex-row max-w-[458px] py-2 pl-4 pr-2 h-[52px] ${isDarkMode ? 'bg-[#1c1c24]' : 'bg-white border border-gray-200'} rounded-[100px]`}>
@@ -56,6 +62,13 @@ const Navbar = () => {
       <div className="sm:flex hidden flex-row justify-end gap-4 items-center">
         <ThemeToggle />
         
+        <button
+          onClick={handleShowWelcome}
+          className="bg-[#8c6dfd] text-white px-4 py-2 rounded-[10px] font-epilogue font-medium hover:bg-[#7a5aed]"
+        >
+          Welcome Guide
+        </button>
+
         <button
           onClick={() => (address ? navigate("create-campaign") : connect())}
           className={`${
