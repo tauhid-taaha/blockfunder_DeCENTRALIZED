@@ -6,12 +6,13 @@ import {
   Article,
   Bookmark,
   AccountCircle,
-  VolunteerActivism, // ✅ Added for "Donate" (Solid Hands Icon)
+  Analytics, // For Dashboard
+  VolunteerActivism, // For Donated Campaign
 } from "@mui/icons-material"; // ✅ Using Material UI Icons
 
 export const navlinks = [
   {
-    name: "Dashboard",
+    name: "Discover Campaign",
     imgUrl: "Dashboard", // ✅ Store MUI icon name as a string
     link: "/home",
   },
@@ -21,13 +22,13 @@ export const navlinks = [
     link: "/create-campaign",
   },
   {
-    name: "Payment",
+    name: "FAQ",
     imgUrl: "CreditCard",
     link: "/chatbot",
   },
   {
-    name: "Withdraw",
-    imgUrl: "LocalAtm",
+    name: "Donated Campaign",
+    imgUrl: "VolunteerActivism",
     link: "/donated-campaigns",
   },
   {
@@ -46,8 +47,8 @@ export const navlinks = [
     link: "/profile",
   },
   {
-    name: "Donate",
-    imgUrl: "VolunteerActivism",
-    link: "/donate",
+    name: "Dashboard",
+    imgUrl: "Analytics",
+    link: "/dashboard",
   },
 ];
